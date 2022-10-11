@@ -1,7 +1,7 @@
-import { Fragment, useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { ethers } from "ethers";
 
-import { Row, Col, Button, Card, Form } from "react-bootstrap";
+import { Row, Col, Button, Card, Form, Container } from "react-bootstrap";
 import ModalWindow from "./ui/ModalWindow";
 import UserContext from "../store/user-context";
 
@@ -41,7 +41,7 @@ const ConnectToMetamask = () => {
     );
   };
   return (
-    <Fragment>
+    <Container>
       <Row>
         <Col>
           <Card>
@@ -91,7 +91,7 @@ const ConnectToMetamask = () => {
 
       {hasError.message &&
         showPopUp("Failed!", hasError.message, showModal, handleClose)}
-    </Fragment>
+    </Container>
   );
 };
 
