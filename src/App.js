@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 import { Row, Col, Button, Card, Form } from "react-bootstrap";
 import Layout from "./components/layout/Layout";
-import AlertModal from "./components/ui/AlertModal";
+import ModalWindow from "./components/ui/ModalWindow";
 import UserContext from "./store/user-context";
 
 const App = () => {
@@ -76,7 +76,7 @@ const App = () => {
       </Row>
 
       {showModal && (
-        <AlertModal
+        <ModalWindow
           title="Success!"
           body={`Your deposit of ${ethInputRef.current.value} ETH is successful!`}
           onShow={showModal}
