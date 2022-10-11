@@ -1,10 +1,9 @@
-import { Fragment, useContext, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { ethers } from "ethers";
 
 import { Row, Col, Button, Card, Form } from "react-bootstrap";
 import Layout from "./components/layout/Layout";
 import AlertModal from "./components/ui/AlertModal";
-import Navigation from "./components/ui/Navigation";
 import UserContext from "./store/user-context";
 
 const App = () => {
@@ -36,9 +35,7 @@ const App = () => {
   const handleClose = () => setShowModal(false);
   const handleShow = () => setShowModal(true);
 
-  return (
-    <Fragment>
-      <Navigation />
+  return (      
     <Layout>
       <Row>
         <Col>
@@ -87,7 +84,6 @@ const App = () => {
         />
       )}
     </Layout>
-    </Fragment>
   );
 };
 
