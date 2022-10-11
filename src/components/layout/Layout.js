@@ -1,12 +1,12 @@
 import { Fragment } from "react";
-import { Container } from "react-bootstrap";
+import { Outlet } from "react-router-dom";
 import Navigation from "../ui/Navigation";
 
-const Layout = (props) => {
+const Layout = () => {
   return (
     <Fragment>
       <Navigation />
-      <Container>{props.children}</Container>
+      <Outlet />
     </Fragment>
   );
 };
