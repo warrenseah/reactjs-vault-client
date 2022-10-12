@@ -1,20 +1,31 @@
 import { useContext, useRef, useState } from "react";
 import { ethers } from "ethers";
 
-import { Row, Col, Button, Card, Form, Container } from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Button,
+  Card,
+  Form,
+  Container,
+  Spinner,
+} from "react-bootstrap";
 import ModalWindow from "./ui/ModalWindow";
 import UserContext from "../store/user-context";
+import { useNavigate } from "react-router-dom";
 
 const ConnectToMetamask = () => {
   const userCtx = useContext(UserContext);
   const [showModal, setShowModal] = useState(false);
   const [hasError, setHasError] = useState({ message: "" });
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const ethInputRef = useRef();
+  const navigate = useNavigate();
 
   const submitHandler = async (event) => {
     event.preventDefault();
-
+    setShowSpinner(true);
     const enteredEthAmt = ethInputRef.current.value;
 
     try {
@@ -23,11 +34,14 @@ const ConnectToMetamask = () => {
       });
       const txn = await depositTxn.wait();
       if (txn.status === 1) {
+        setShowSpinner(false);
         handleShow();
         userCtx.saveUserBalance();
         console.log("Deposit is successfully!");
+        navigate("stakes");
       }
     } catch (error) {
+      setShowSpinner(false);
       setHasError({ message: "Deposit failed!" });
       console.log("Deposit error, ", error);
     }
@@ -40,6 +54,23 @@ const ConnectToMetamask = () => {
       <ModalWindow title={title} body={body} onShow={onShow} onHide={onHide} />
     );
   };
+
+  const showBtnOrSpinner = !showSpinner ? (
+    <Button variant="primary" type="submit">
+      Deposit
+    </Button>
+  ) : (
+    <Button variant="secondary" disabled>
+      <Spinner
+        as="span"
+        animation="border"
+        size="md"
+        role="status"
+        aria-hidden="true"
+      />
+    </Button>
+  );
+
   return (
     <Container>
       <Row>
@@ -70,9 +101,7 @@ const ConnectToMetamask = () => {
                       ref={ethInputRef}
                     />
                   </Form.Group>
-                  <Button variant="primary" type="submit">
-                    Deposit
-                  </Button>
+                  {showBtnOrSpinner}
                 </Form>
               )}
             </Card.Body>
