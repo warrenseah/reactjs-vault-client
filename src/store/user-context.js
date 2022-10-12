@@ -11,6 +11,7 @@ const UserContext = createContext({
   saveUserBalance: () => {},
   vault: null,
   signer: null,
+  provider: null,
 });
 
 export const UserContextProvider = (props) => {
@@ -76,6 +77,7 @@ export const UserContextProvider = (props) => {
         saveUserBalance: saveUserBalance,
         vault: vault,
         signer: signer,
+        provider: provider,
       }}
     >
       {props.children}
