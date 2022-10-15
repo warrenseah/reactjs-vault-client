@@ -14,14 +14,12 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import ModalWindow from "../components/ui/ModalWindow";
 import { convertToDateTime } from "../lib/utils";
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
   const { address, vault } = userCtx;
 
-  const [showModal, setShowModal] = useState(false);
   const [hasError, setHasError] = useState({ message: "" });
   const [showSpinner, setShowSpinner] = useState(false);
   const [acctData, setAcctData] = useState({});
@@ -43,7 +41,6 @@ const Home = (props) => {
       };
       setAcctData(accountData);
     };
-
     init();
   }, [address, vault]);
 
@@ -59,7 +56,6 @@ const Home = (props) => {
       const txn = await depositTxn.wait();
       if (txn.status === 1) {
         setShowSpinner(false);
-        handleShow();
         userCtx.saveUserBalance();
         console.log("Deposit is successfully!");
         navigate("stakes");
@@ -69,14 +65,6 @@ const Home = (props) => {
       setHasError({ message: "Deposit failed!" });
       console.log("Deposit error, ", error);
     }
-  };
-
-  const handleClose = () => setShowModal(false);
-  const handleShow = () => setShowModal(true);
-  const showPopUp = ({ title, body, onShow, onHide }) => {
-    return (
-      <ModalWindow title={title} body={body} onShow={onShow} onHide={onHide} />
-    );
   };
 
   const showBtnOrSpinner = !showSpinner ? (
@@ -94,6 +82,33 @@ const Home = (props) => {
       />
     </Button>
   );
+
+  const showProfile = acctData.haveStakes ? (
+    <Row className="my-3">
+      <Col>
+        <Card>
+          <Card.Header className="text-center">
+            <strong>User Profile </strong>
+          </Card.Header>
+          <ListGroup className="list-group-flush">
+            <ListGroup.Item>
+              <strong> Total Stakes: {acctData.stakeCount}</strong>
+            </ListGroup.Item>
+            <ListGroup.Item>
+              AccountId: {acctData.id.toString()}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              ReferredCount: {acctData.referredCount.toString()}
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Last Active:{" "}
+              {convertToDateTime(acctData.lastActiveTimestamp.toNumber())}
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
+      </Col>
+    </Row>
+  ) : '' ;
 
   return (
     <Container>
@@ -133,41 +148,8 @@ const Home = (props) => {
         </Col>
       </Row>
 
-      {acctData.id && (
-        <Row className="my-3">
-          <Col>
-            <Card>
-              <Card.Header className="text-center">
-                <strong>User Profile </strong>
-              </Card.Header>
-              <ListGroup className="list-group-flush">
-                <ListGroup.Item>
-                  <strong> Total Stakes: {acctData.stakeCount}</strong>
-                </ListGroup.Item>
-                <ListGroup.Item>AccountId: {acctData.id.toString()}</ListGroup.Item>
-                <ListGroup.Item>
-                  ReferredCount: {acctData.referredCount.toString()}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  Last Active: {convertToDateTime(acctData.lastActiveTimestamp.toNumber())}
-                </ListGroup.Item>
-              </ListGroup>
-            </Card>
-          </Col>
-        </Row>
-      )}
+      {acctData.haveStakes && showProfile}
 
-      {showModal && (
-        <ModalWindow
-          title="Success!"
-          body={`Your deposit of ${ethInputRef.current.value} ETH is successful!`}
-          onShow={showModal}
-          onHide={handleClose}
-        />
-      )}
-
-      {hasError.message &&
-        showPopUp("Failed!", hasError.message, showModal, handleClose)}
     </Container>
   );
 };
