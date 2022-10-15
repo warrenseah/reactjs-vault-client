@@ -84,24 +84,34 @@ const Stakes = () => {
 
   return (
     <Fragment>
-      {showSpinner ? (<Spinner animation="border" role="status">
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>) : null }
+      {showSpinner ? (
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      ) : null}
       <Container>
         <Row className="my-3">
           <Col>
             <h1>Stakes</h1>
           </Col>
-          <StakeCards items={stakeArr} onUnstake={unstakeClickHandler} />
+          {stakeArr.length > 0 ? (
+            <StakeCards items={stakeArr} onUnstake={unstakeClickHandler} />
+          ) : (
+            <p>No Stake.</p>
+          )}
         </Row>
         <Row>
           <Col className="my-3">
-            <h1>Withdrawals</h1>
+            <h1>Pending Withdrawals</h1>
           </Col>
-          <WithdrawalCards
-            items={withdrawArr}
-            onWithdraw={withdrawClickHandler}
-          />
+          {withdrawArr.length > 0 ? (
+            <WithdrawalCards
+              items={withdrawArr}
+              onWithdraw={withdrawClickHandler}
+            />
+          ) : (
+            <p>No Pending Withdrawal.</p>
+          )}
         </Row>
       </Container>
     </Fragment>

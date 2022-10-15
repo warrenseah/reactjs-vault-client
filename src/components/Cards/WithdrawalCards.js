@@ -5,10 +5,6 @@ import { convertToDateTime, haveTimePast } from "../../lib/utils";
 function WithdrawalCards(props) {
   let count = 0;
 
-  if (props.items.length === 0) {
-    return <p>No Withdrawal.</p>;
-  }
-
   return (
       <Row md={2} className="g-4">
         {props.items.map((item) => (
