@@ -11,3 +11,7 @@ export const haveTimePast = unix => {
         return false;
     }
 };
+
+export const truncateTo2DC = stringNum => {
+    return stringNum.slice(0, (stringNum.indexOf("."))+3); //With 3 exposing the hundredths place
+};
