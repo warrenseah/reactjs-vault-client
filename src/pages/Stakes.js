@@ -38,7 +38,6 @@ const Stakes = () => {
     if (!vault) {
       return;
     }
-    console.log("useEffect re-render!");
     getStakeWithdrawArr();
   }, [address, vault, getStakeWithdrawArr]);
 
