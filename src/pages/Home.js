@@ -20,7 +20,6 @@ const Home = (props) => {
   const userCtx = useContext(UserContext);
   const { address, vault } = userCtx;
 
-  const [hasError, setHasError] = useState({ message: "" });
   const [showSpinner, setShowSpinner] = useState(false);
   const [acctData, setAcctData] = useState({});
 
@@ -62,7 +61,6 @@ const Home = (props) => {
       }
     } catch (error) {
       setShowSpinner(false);
-      setHasError({ message: "Deposit failed!" });
       console.log("Deposit error, ", error);
     }
   };
