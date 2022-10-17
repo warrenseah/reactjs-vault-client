@@ -5,7 +5,7 @@ import tokens from "../../lib/tokens.json";
 
 function Yields(props) {
   let count = 0;
-  if (!props.items) {
+  if (props.items.length === 0) {
     return <p>No reward found!</p>;
   }
 
