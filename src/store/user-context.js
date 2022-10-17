@@ -14,6 +14,10 @@ const UserContext = createContext({
   provider: null,
 });
 
+const chainId = ethers.BigNumber.from(56).toHexString(); // BNB chain
+const chainId2 = ethers.BigNumber.from(97).toHexString(); // BNB chain testnet
+const chainId3 = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
+
 export const UserContextProvider = (props) => {
   const [userData, setUserData] = useState({ address: "", balance: 0 });
   const [provider, setProvider] = useState(null);
@@ -26,6 +30,13 @@ export const UserContextProvider = (props) => {
     // Asking if metamask is already present or not
     if (window.ethereum) {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
+      const chainId = await newProvider.getNetwork();
+
+      if(chainId.chainId !== 1337) {
+        alert("Switch and use Ganache Test Network");
+        return;
+      }
+
       const accounts = await newProvider.send("eth_requestAccounts", []);
       const balance = await newProvider.getBalance(accounts[0]);
       setUserData({
