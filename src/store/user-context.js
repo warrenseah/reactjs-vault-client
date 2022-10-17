@@ -9,14 +9,15 @@ const UserContext = createContext({
   saveUserData: (address, balance) => {},
   saveUserAddress: (address) => {},
   saveUserBalance: () => {},
+  resetMM: () => {},
   vault: null,
   signer: null,
   provider: null,
 });
 
-const chainId = ethers.BigNumber.from(56).toHexString(); // BNB chain
-const chainId2 = ethers.BigNumber.from(97).toHexString(); // BNB chain testnet
-const chainId3 = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
+// const chainId = ethers.BigNumber.from(56).toHexString(); // BNB chain
+// const chainId2 = ethers.BigNumber.from(97).toHexString(); // BNB chain testnet
+// const chainId3 = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
 
 export const UserContextProvider = (props) => {
   const [userData, setUserData] = useState({ address: "", balance: 0 });
@@ -77,6 +78,13 @@ export const UserContextProvider = (props) => {
     });
   };
 
+  const resetMM = () => {
+    setUserData({ address: "", balance: 0 });
+    setVault(null);
+    setSigner(null);
+    setProvider(null);
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -86,6 +94,7 @@ export const UserContextProvider = (props) => {
         saveUserData: saveUserData,
         saveUserAddress: saveUserAddress,
         saveUserBalance: saveUserBalance,
+        resetMM: resetMM,
         vault: vault,
         signer: signer,
         provider: provider,
