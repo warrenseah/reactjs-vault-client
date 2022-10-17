@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import UserContext from "../store/user-context";
 
 import { ethers } from "ethers";
@@ -16,9 +16,11 @@ import {
 import { useNavigate } from "react-router-dom";
 import { convertToDateTime } from "../lib/utils";
 
+const selectedChainId = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
+
 const Home = (props) => {
   const userCtx = useContext(UserContext);
-  const { address, vault } = userCtx;
+  const { address, balance, vault, provider, connectToMM, resetMM, signer } = userCtx;
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [acctData, setAcctData] = useState({});
@@ -26,8 +28,26 @@ const Home = (props) => {
   const ethInputRef = useRef();
   const navigate = useNavigate();
 
+  const handleAcctChanged = useCallback((accounts) => {
+    console.log('accounts changed');
+    setAcctData({});
+    connectToMM();
+  }, [connectToMM]);
+
+  const handleChainIdChanged = useCallback((chainId) => {
+    console.log('chainId changed: ', chainId);
+    if(chainId !== selectedChainId) {
+      alert('Please change to the selected network!');
+      setAcctData({});
+      resetMM()
+    } else {
+      console.log('change back!');
+      connectToMM();
+    }
+  }, [resetMM, connectToMM]);
+
   useEffect(() => {
-    if (!address) {
+    if (!address || !provider) {
       return;
     }
 
@@ -39,9 +59,11 @@ const Home = (props) => {
         stakeCount: stakeLength.length,
       };
       setAcctData(accountData);
+      window.ethereum.on("accountsChanged", handleAcctChanged);
+      window.ethereum.on("chainChanged", handleChainIdChanged);
     };
     init();
-  }, [address, vault]);
+  }, [address, vault, provider, handleAcctChanged, handleChainIdChanged]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -115,19 +137,19 @@ const Home = (props) => {
           <Card>
             <Card.Header className="text-center">
               <strong>Address: </strong>
-              {userCtx.address}
+              {address}
             </Card.Header>
             <Card.Body>
               <Card.Text>
                 <strong>Balance: </strong>
-                {userCtx.balance}
+                {balance}
               </Card.Text>
-              {!userCtx.signer && (
-                <Button onClick={userCtx.connectToMM} variant="primary">
+              {!signer && (
+                <Button onClick={connectToMM} variant="primary">
                   Connect to wallet
                 </Button>
               )}
-              {userCtx.signer && (
+              {signer && (
                 <Form onSubmit={submitHandler}>
                   <Form.Group className="mb-3" controlId="formBasicDeposit">
                     <Form.Label>Deposit Ether</Form.Label>
@@ -146,7 +168,7 @@ const Home = (props) => {
         </Col>
       </Row>
 
-      {acctData.haveStakes && showProfile}
+      {address && showProfile}
 
     </Container>
   );
