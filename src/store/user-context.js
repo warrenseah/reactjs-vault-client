@@ -1,6 +1,7 @@
 import { createContext, useState } from "react";
 import { ethers } from "ethers";
 import ContractMeta from "../contractMeta.json";
+import { showToast } from "../lib/utils";
 
 const UserContext = createContext({
   address: "",
@@ -56,8 +57,10 @@ export const UserContextProvider = (props) => {
         newSigner
       );
       setVault(newVault);
+      showToast('Connected to Metamask!');
     } else {
       alert("install metamask extension!!");
+      showToast('Not connected to wallet!', 'warning');
     }
   };
 
