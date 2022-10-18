@@ -50,14 +50,14 @@ const Stakes = () => {
       if (receipt.status === 1) {
         console.log("Submit Withdrawal is Successful!");
         await getStakeWithdrawArr();
-        showToast('Withdrawal Submitted!', 'info');
+        showToast("Withdrawal Submitted!", "info");
       } else {
         throw new Error("Submit withdrawal failed!");
       }
     } catch (error) {
       console.log("Error: ", error.message);
       setShowSpinner(false);
-      showToast('Withdrawal Failed!', 'error');
+      showToast("Withdrawal Failed!", "error");
     }
   };
 
@@ -69,7 +69,7 @@ const Stakes = () => {
       if (receipt.status === 1) {
         console.log("Funds are Successfully Withdrawn!");
         await getStakeWithdrawArr();
-        showToast('Funds are Successfully Withdrawn!', 'success');
+        showToast("Funds are Successfully Withdrawn!", "success");
       } else {
         setShowSpinner(false);
         throw new Error("Withdrawal failed!");
@@ -77,7 +77,7 @@ const Stakes = () => {
     } catch (error) {
       console.log("Error: ", error.message);
       setShowSpinner(false);
-      showToast('Withdrawal Failed!', 'error');
+      showToast("Withdrawal Failed!", "error");
     }
   };
 
@@ -87,38 +87,40 @@ const Stakes = () => {
   }
 
   return (
-    <Fragment>
-      {showSpinner ? (
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      ) : null}
-      <Container>
-        <Row className="my-3">
-          <Col>
-            <h1>Stakes</h1>
-          </Col>
-          {stakeArr.length > 0 ? (
-            <StakeCards items={stakeArr} onUnstake={unstakeClickHandler} />
-          ) : (
-            <p>No Stake.</p>
-          )}
-        </Row>
-        <Row>
-          <Col className="my-3">
-            <h1>Pending Withdrawals</h1>
-          </Col>
-          {withdrawArr.length > 0 ? (
-            <WithdrawalCards
-              items={withdrawArr}
-              onWithdraw={withdrawClickHandler}
-            />
-          ) : (
-            <p>No Pending Withdrawal.</p>
-          )}
-        </Row>
-      </Container>
-    </Fragment>
+    <Container>
+      <Row className="my-3">
+        <Col>
+          <h1>Stakes</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {showSpinner ? (
+            <Spinner animation="border" role="status" className="my-3">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          ) : null}
+        </Col>
+        {stakeArr.length > 0 ? (
+          <StakeCards items={stakeArr} onUnstake={unstakeClickHandler} />
+        ) : (
+          <p>No Stake.</p>
+        )}
+      </Row>
+      <Row>
+        <Col className="my-3">
+          <h1>Pending Withdrawals</h1>
+        </Col>
+        {withdrawArr.length > 0 ? (
+          <WithdrawalCards
+            items={withdrawArr}
+            onWithdraw={withdrawClickHandler}
+          />
+        ) : (
+          <p>No Pending Withdrawal.</p>
+        )}
+      </Row>
+    </Container>
   );
 };
 

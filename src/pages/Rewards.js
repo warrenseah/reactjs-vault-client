@@ -1,5 +1,5 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Fragment, useCallback, useContext, useEffect, useState } from "react";
+import { Col, Container, Row, Spinner } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
 import Yields from "../components/Cards/YieldRewardCards";
 import UserContext from "../store/user-context";
@@ -17,6 +17,7 @@ const Rewards = () => {
   const userCtx = useContext(UserContext);
   const [yieldStakesArr, setYieldStakesArr] = useState([]);
   const { address, vault, signer } = userCtx;
+  const [showSpinner, setShowSpinner] = useState(true);
 
   const getStakeArr = useCallback(async () => {
     const stakeArrIds = await vault.addressToStakeArr(address);
@@ -44,7 +45,7 @@ const Rewards = () => {
       yields.push(item);
     }
     const stakeArr = await getStakeArr();
-    
+
     const eligibleStakes = [];
     // Check if user stake cards exists before yield commence
     for (let j = 0; j < yields.length; j++) {
@@ -68,7 +69,8 @@ const Rewards = () => {
       }
     }
     setYieldStakesArr(eligibleStakes);
-  },[vault, getStakeArr]);
+    setShowSpinner(false);
+  }, [vault, getStakeArr]);
 
   useEffect(() => {
     init();
@@ -80,20 +82,25 @@ const Rewards = () => {
 
   const claimHandler = async (stakeId, yieldId) => {
     try {
+      setShowSpinner(true);
       const txn = await vault.claimYieldTokens(stakeId, yieldId);
       const receipt = await txn.wait();
       if (receipt.status === 1) {
         console.log(
           `Claim is successful for ${stakeId} with ${yieldId} reward card!`
         );
-        showToast(`Claim is successful for ${stakeId} with ${yieldId} reward card!`, 'success');
+        showToast(
+          `Claim is successful for ${stakeId} with ${yieldId} reward card!`,
+          "success"
+        );
         await init();
       } else {
         throw new Error("Claim failed!");
       }
     } catch (error) {
       console.log(error);
-      showToast(`Claim failed!`, 'error');
+      setShowSpinner(false);
+      showToast(`Claim failed!`, "error");
     }
   };
 
@@ -102,6 +109,15 @@ const Rewards = () => {
       <Row>
         <Col className="my-3">
           <h1>This is Rewards Page</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {showSpinner ? (
+            <Spinner animation="border" role="status" className="my-3">
+              <span className="visually-hidden">Loading...</span>
+            </Spinner>
+          ) : null}
         </Col>
       </Row>
       <Yields items={yieldStakesArr} onClaim={claimHandler} />
