@@ -35,7 +35,7 @@ export const UserContextProvider = (props) => {
       const chainId = await newProvider.getNetwork();
 
       if(chainId.chainId !== 1337) {
-        alert("Switch and use Ganache Test Network");
+        showToast("Switch and use Ganache Test Network", 'warning');
         return;
       }
 
@@ -59,8 +59,7 @@ export const UserContextProvider = (props) => {
       setVault(newVault);
       showToast(`Wallet connected: ${accounts[0]}`);
     } else {
-      alert("install metamask extension!!");
-      showToast('Not connected to wallet!', 'warning');
+      showToast("Install metamask extension!", 'info');
     }
   }, []);
 
