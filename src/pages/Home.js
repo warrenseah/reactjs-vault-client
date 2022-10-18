@@ -14,37 +14,45 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { convertToDateTime } from "../lib/utils";
+import { convertToDateTime, showToast } from "../lib/utils";
 
 const selectedChainId = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
-  const { address, balance, vault, provider, connectToMM, resetMM, signer } = userCtx;
+  const { address, balance, vault, provider, connectToMM, resetMM, signer } =
+    userCtx;
 
   const [showSpinner, setShowSpinner] = useState(false);
+  const [showSpinnerConnect, setShowSpinnerConnect] = useState(false);
   const [acctData, setAcctData] = useState({});
 
   const ethInputRef = useRef();
   const navigate = useNavigate();
 
-  const handleAcctChanged = useCallback((accounts) => {
-    console.log('accounts changed');
-    setAcctData({});
-    connectToMM();
-  }, [connectToMM]);
-
-  const handleChainIdChanged = useCallback((chainId) => {
-    console.log('chainId changed: ', chainId);
-    if(chainId !== selectedChainId) {
-      alert('Please change to the selected network!');
+  const handleAcctChanged = useCallback(
+    (accounts) => {
+      console.log("accounts changed");
       setAcctData({});
-      resetMM()
-    } else {
-      console.log('change back!');
       connectToMM();
-    }
-  }, [resetMM, connectToMM]);
+    },
+    [connectToMM]
+  );
+
+  const handleChainIdChanged = useCallback(
+    (chainId) => {
+      console.log("chainId changed: ", chainId);
+      if (chainId !== selectedChainId) {
+        alert("Please change to the selected network!");
+        setAcctData({});
+        resetMM();
+      } else {
+        console.log("change back!");
+        connectToMM();
+      }
+    },
+    [resetMM, connectToMM]
+  );
 
   useEffect(() => {
     if (!address || !provider) {
@@ -79,17 +87,41 @@ const Home = (props) => {
         setShowSpinner(false);
         userCtx.saveUserBalance();
         console.log("Deposit is successfully!");
+        showToast(`${enteredEthAmt} BNB submitted!`, 'success');
         navigate("stakes");
       }
     } catch (error) {
       setShowSpinner(false);
       console.log("Deposit error, ", error);
+      showToast(`Deposit Error! Please try again!`, 'error');
     }
   };
 
   const showBtnOrSpinner = !showSpinner ? (
     <Button variant="primary" type="submit">
       Deposit
+    </Button>
+  ) : (
+    <Button variant="secondary" disabled>
+      <Spinner
+        as="span"
+        animation="border"
+        size="md"
+        role="status"
+        aria-hidden="true"
+      />
+    </Button>
+  );
+
+  const showConnectOrSpinner = !showSpinnerConnect ? (
+    <Button
+      onClick={() => {
+        setShowSpinnerConnect(true);
+        connectToMM();
+      }}
+      variant="primary" 
+    >
+      Connect to wallet
     </Button>
   ) : (
     <Button variant="secondary" disabled>
@@ -114,9 +146,7 @@ const Home = (props) => {
             <ListGroup.Item>
               <strong> Total Stakes: {acctData.stakeCount}</strong>
             </ListGroup.Item>
-            <ListGroup.Item>
-              AccountId: {acctData.id.toString()}
-            </ListGroup.Item>
+            <ListGroup.Item>AccountId: {acctData.id.toString()}</ListGroup.Item>
             <ListGroup.Item>
               ReferredCount: {acctData.referredCount.toString()}
             </ListGroup.Item>
@@ -128,7 +158,9 @@ const Home = (props) => {
         </Card>
       </Col>
     </Row>
-  ) : '' ;
+  ) : (
+    ""
+  );
 
   return (
     <Container>
@@ -144,11 +176,9 @@ const Home = (props) => {
                 <strong>Balance: </strong>
                 {balance}
               </Card.Text>
-              {!signer && (
-                <Button onClick={connectToMM} variant="primary">
-                  Connect to wallet
-                </Button>
-              )}
+
+              {!signer && showConnectOrSpinner}
+
               {signer && (
                 <Form onSubmit={submitHandler}>
                   <Form.Group className="mb-3" controlId="formBasicDeposit">
@@ -169,7 +199,6 @@ const Home = (props) => {
       </Row>
 
       {address && showProfile}
-
     </Container>
   );
 };
