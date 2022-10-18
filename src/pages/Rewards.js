@@ -43,26 +43,22 @@ const Rewards = () => {
       const item = await vault.yields(endingYields[i].toNumber() - 1);
       yields.push(item);
     }
-
     const stakeArr = await getStakeArr();
-
+    
     const eligibleStakes = [];
     // Check if user stake cards exists before yield commence
     for (let j = 0; j < yields.length; j++) {
       const yieldSinceTime = yields[j].sinceTime.toNumber();
-      const yieldTillTime = yields[j].tillTime.toNumber();
 
       // iterate with all available stake cards
       for (let z = 0; z < stakeArr.length; z++) {
         const stakeSinceTime = stakeArr[z].sinceTime.toNumber();
-        const stakeTillTime = stakeArr[z].tillTime.toNumber();
-        if (stakeSinceTime <= yieldSinceTime && stakeTillTime < yieldTillTime) {
+        if (stakeSinceTime < yieldSinceTime) {
           // Find claim amount for eligible stakes
           const claims = await vault.getClaimsFor(
             stakeArr[z].id.toNumber() + 1,
             yields[j].id.toNumber() + 1
           );
-
           eligibleStakes.push({
             yield: yields[j],
             stake: stakeArr[z],
