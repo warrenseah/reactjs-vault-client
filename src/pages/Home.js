@@ -43,11 +43,10 @@ const Home = (props) => {
     (chainId) => {
       console.log("chainId changed: ", chainId);
       if (chainId !== selectedChainId) {
-        alert("Please change to the selected network!");
+        showToast("Please change to the selected network!", 'warning');
         setAcctData({});
         resetMM();
       } else {
-        console.log("change back!");
         connectToMM();
       }
     },
