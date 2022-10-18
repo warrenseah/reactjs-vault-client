@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import StakeCards from "../components/Cards/StakeCards";
 import WithdrawalCards from "../components/Cards/WithdrawalCards";
 import UserContext from "../store/user-context";
+import { showToast } from "../lib/utils";
 
 const Stakes = () => {
   const userCtx = useContext(UserContext);
@@ -49,12 +50,14 @@ const Stakes = () => {
       if (receipt.status === 1) {
         console.log("Submit Withdrawal is Successful!");
         await getStakeWithdrawArr();
+        showToast('Withdrawal Submitted!', 'info');
       } else {
         throw new Error("Submit withdrawal failed!");
       }
     } catch (error) {
       console.log("Error: ", error.message);
       setShowSpinner(false);
+      showToast('Withdrawal Failed!', 'error');
     }
   };
 
@@ -64,8 +67,9 @@ const Stakes = () => {
       const txn = await vault.withdraw(withdrawId);
       const receipt = await txn.wait();
       if (receipt.status === 1) {
-        console.log("Withdrawal is Successful!");
+        console.log("Funds are Successfully Withdrawn!");
         await getStakeWithdrawArr();
+        showToast('Funds are Successfully Withdrawn!', 'success');
       } else {
         setShowSpinner(false);
         throw new Error("Withdrawal failed!");
@@ -73,6 +77,7 @@ const Stakes = () => {
     } catch (error) {
       console.log("Error: ", error.message);
       setShowSpinner(false);
+      showToast('Withdrawal Failed!', 'error');
     }
   };
 

@@ -1,6 +1,6 @@
 import { Row, Col, Card, ListGroup, Button } from "react-bootstrap";
 import { ethers } from "ethers";
-import { convertToDateTime, haveTimePast } from "../../lib/utils";
+import { convertToDateTime, haveTimePast, showToast } from "../../lib/utils";
 
 function WithdrawalCards(props) {
   let count = 0;
@@ -32,6 +32,7 @@ function WithdrawalCards(props) {
                   onClick={() => {
                     if (!haveTimePast(item.end.toNumber())) {
                       console.log("Time lock is still active!");
+                      showToast("Time lock is still active!", 'warning');
                       return;
                     }
 
