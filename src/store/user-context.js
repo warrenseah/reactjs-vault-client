@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useCallback } from "react";
 import { ethers } from "ethers";
 import ContractMeta from "../contractMeta.json";
 import { showToast } from "../lib/utils";
@@ -28,7 +28,7 @@ export const UserContextProvider = (props) => {
 
   // Button handler button for handling a
   // request event for metamask
-  const connectToMetamask = async () => {
+  const connectToMetamask = useCallback(async () => {
     // Asking if metamask is already present or not
     if (window.ethereum) {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -57,12 +57,12 @@ export const UserContextProvider = (props) => {
         newSigner
       );
       setVault(newVault);
-      showToast('Connected to Metamask!');
+      showToast(`Wallet connected: ${accounts[0]}`);
     } else {
       alert("install metamask extension!!");
       showToast('Not connected to wallet!', 'warning');
     }
-  };
+  }, []);
 
   const saveUserData = (address, balance) => {
     setUserData({ address, balance });
@@ -81,12 +81,12 @@ export const UserContextProvider = (props) => {
     });
   };
 
-  const resetMM = () => {
+  const resetMM = useCallback(() => {
     setUserData({ address: "", balance: 0 });
     setVault(null);
     setSigner(null);
     setProvider(null);
-  };
+  }, []);
 
   return (
     <UserContext.Provider
