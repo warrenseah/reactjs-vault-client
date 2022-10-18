@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { convertToDateTime, truncateTo2DC } from "../../lib/utils";
 import tokens from "../../lib/tokens.json";
 
-function Yields(props) {
+function YieldRewards(props) {
   let count = 0;
   if (props.items.length === 0) {
     return <p>No reward found!</p>;
@@ -53,4 +53,4 @@ function Yields(props) {
   );
 }
 
-export default Yields;
+export default YieldRewards;

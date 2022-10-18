@@ -1,8 +1,9 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import Yields from "../components/Cards/Yields";
+import Yields from "../components/Cards/YieldRewardCards";
 import UserContext from "../store/user-context";
+import { showToast } from "../lib/utils";
 
 // const erc20ABI = [
 //   // Read-Only Functions
@@ -16,7 +17,6 @@ const Rewards = () => {
   const userCtx = useContext(UserContext);
   const [yieldStakesArr, setYieldStakesArr] = useState([]);
   const { address, vault, signer } = userCtx;
-
 
   const getStakeArr = useCallback(async () => {
     const stakeArrIds = await vault.addressToStakeArr(address);
@@ -86,12 +86,14 @@ const Rewards = () => {
         console.log(
           `Claim is successful for ${stakeId} with ${yieldId} reward card!`
         );
+        showToast(`Claim is successful for ${stakeId} with ${yieldId} reward card!`, 'success');
         await init();
       } else {
         throw new Error("Claim failed!");
       }
     } catch (error) {
       console.log(error);
+      showToast(`Claim failed!`, 'error');
     }
   };
 
