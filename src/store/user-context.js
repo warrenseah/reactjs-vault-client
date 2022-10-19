@@ -34,8 +34,8 @@ export const UserContextProvider = (props) => {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
       const chainId = await newProvider.getNetwork();
 
-      if(chainId.chainId !== 1337) {
-        showToast("Switch and use Ganache Test Network", 'warning');
+      if(chainId.chainId !== 97) {
+        showToast("Switch and use BNB Test Network", 'warning');
         return;
       }
 
