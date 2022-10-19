@@ -16,7 +16,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { convertToDateTime, showToast } from "../lib/utils";
 
-const selectedChainId = ethers.BigNumber.from(1337).toHexString(); // hardhat node test network
+const selectedChainId = ethers.BigNumber.from(97).toHexString(); // BNB chain test network
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
