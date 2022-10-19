@@ -41,8 +41,10 @@ const Rewards = () => {
     const yields = [];
 
     for (let i = 0; i < endingYields.length; i++) {
-      const item = await vault.yields(endingYields[i].toNumber() - 1);
-      yields.push(item);
+      if(endingYields[i].toNumber() !== 0) {
+        const item = await vault.yields(endingYields[i].toNumber() - 1);
+        yields.push(item);
+      }
     }
     const stakeArr = await getStakeArr();
 
