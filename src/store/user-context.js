@@ -63,6 +63,7 @@ export const UserContextProvider = (props) => {
       showToast(`Wallet connected: ${accounts[0]}`);
     } else {
       showToast("Install metamask extension!", 'info');
+      closeSpinnerFunc();
     }
   }, [selectedChain]);
 
