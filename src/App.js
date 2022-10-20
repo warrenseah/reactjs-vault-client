@@ -6,7 +6,7 @@ import Layout from "./components/layout/Layout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Spinner } from "react-bootstrap";
+import Spinner from "react-bootstrap/Spinner";
 
 const Stakes = React.lazy(() => import("./pages/Stakes"));
 const Rewards = React.lazy(() => import("./pages/Rewards"));

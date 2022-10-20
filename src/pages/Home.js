@@ -3,16 +3,15 @@ import UserContext from "../store/user-context";
 
 import { ethers } from "ethers";
 
-import {
-  Row,
-  Col,
-  Button,
-  Card,
-  Form,
-  Container,
-  Spinner,
-  ListGroup,
-} from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+import ListGroup from "react-bootstrap/ListGroup";
+
 import { useNavigate } from "react-router-dom";
 import { convertToDateTime, showToast } from "../lib/utils";
 

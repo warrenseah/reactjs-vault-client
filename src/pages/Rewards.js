@@ -1,5 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+
 import { Navigate } from "react-router-dom";
 import Yields from "../components/Cards/YieldRewardCards";
 import UserContext from "../store/user-context";

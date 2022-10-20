@@ -1,4 +1,9 @@
-import { Row, Col, Card, ListGroup, Button } from "react-bootstrap";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+
 import { ethers } from "ethers";
 import { convertToDateTime, truncateTo2DC } from "../../lib/utils";
 import tokens from "../../lib/tokens.json";
