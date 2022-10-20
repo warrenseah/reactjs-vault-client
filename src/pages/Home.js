@@ -16,11 +16,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { convertToDateTime, showToast } from "../lib/utils";
 
-const selectedChainId = ethers.BigNumber.from(97).toHexString(); // BNB chain test network
-
 const Home = (props) => {
   const userCtx = useContext(UserContext);
-  const { address, balance, vault, provider, connectToMM, resetMM, signer } =
+  const { address, balance, vault, provider, connectToMM, resetMM, signer, chainId } =
     userCtx;
 
   const [showSpinner, setShowSpinner] = useState(false);
@@ -29,6 +27,8 @@ const Home = (props) => {
 
   const ethInputRef = useRef();
   const navigate = useNavigate();
+
+  const selectedChainId = ethers.BigNumber.from(chainId).toHexString(); // BNB chain test network
 
   const handleAcctChanged = useCallback(
     (accounts) => {
@@ -40,9 +40,9 @@ const Home = (props) => {
   );
 
   const handleChainIdChanged = useCallback(
-    (chainId) => {
-      console.log("chainId changed: ", chainId);
-      if (chainId !== selectedChainId) {
+    (chainIdHex) => {
+      console.log("chainId changed: ", chainIdHex);
+      if (chainIdHex !== selectedChainId) {
         showToast("Please change to the selected network!", 'warning');
         setAcctData({});
         resetMM();
@@ -50,7 +50,7 @@ const Home = (props) => {
         connectToMM();
       }
     },
-    [resetMM, connectToMM]
+    [resetMM, connectToMM, selectedChainId]
   );
 
   useEffect(() => {
@@ -112,11 +112,15 @@ const Home = (props) => {
     </Button>
   );
 
+  const closeSpinnerHandler = () => {
+    setShowSpinnerConnect(false);
+  };
+
   const showConnectOrSpinner = !showSpinnerConnect ? (
     <Button
       onClick={() => {
         setShowSpinnerConnect(true);
-        connectToMM();
+        connectToMM(closeSpinnerHandler);
       }}
       variant="primary" 
     >
