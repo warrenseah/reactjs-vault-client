@@ -82,9 +82,9 @@ const Rewards = () => {
 
   useEffect(() => {
     init();
-
+    const filterClaimFrom = vault.filters.ClaimedTokens(null,null,null,address,null);
     vault.on(
-      "ClaimedTokens",
+      filterClaimFrom,
       (yieldId, stakeId, token, user, amount, event) => {
         const txnObj = {
           yieldId: yieldId.toNumber(),
