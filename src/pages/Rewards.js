@@ -9,6 +9,7 @@ import { Navigate } from "react-router-dom";
 import Yields from "../components/Cards/YieldRewardCards";
 import UserContext from "../store/user-context";
 import { showToast } from "../lib/utils";
+import {ethers} from 'ethers';
 
 // const erc20ABI = [
 //   // Read-Only Functions
@@ -46,7 +47,7 @@ const Rewards = () => {
     const yields = [];
 
     for (let i = 0; i < endingYields.length; i++) {
-      if(endingYields[i].toNumber() !== 0) {
+      if (endingYields[i].toNumber() !== 0) {
         const item = await vault.yields(endingYields[i].toNumber() - 1);
         yields.push(item);
       }
@@ -81,6 +82,34 @@ const Rewards = () => {
 
   useEffect(() => {
     init();
+
+    vault.on(
+      "ClaimedTokens",
+      (yieldId, stakeId, token, user, amount, event) => {
+        const txnObj = {
+          yieldId: yieldId.toNumber(),
+          stakeId: stakeId.toNumber(),
+          token,
+          user,
+          amount: ethers.utils.formatEther(amount.toString()),
+          event,
+        };
+
+        console.log(txnObj);
+        showToast(
+          `stakeId: ${txnObj.stakeId + 1} claimed ${
+            txnObj.amount
+          } tokens. txnHash: ${txnObj.event.transactionHash}`,
+          "info"
+        );
+      }
+    );
+
+    // remove eventListener on unmounting
+    return () => {
+      console.log("eventListener is removed!");
+      vault.removeAllListeners();
+    };
   }, [address, vault, signer, init]);
 
   if (!userCtx.address) {
@@ -94,10 +123,10 @@ const Rewards = () => {
       const receipt = await txn.wait();
       if (receipt.status === 1) {
         console.log(
-          `Claim is successful for ${stakeId} with ${yieldId} reward card!`
+          `Claim success! for ${stakeId} with ${yieldId} reward card!`
         );
         showToast(
-          `Claim is successful for ${stakeId} with ${yieldId} reward card!`,
+          `Claim success!`,
           "success"
         );
         await init();
