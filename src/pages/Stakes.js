@@ -13,7 +13,7 @@ import { showToast } from "../lib/utils";
 
 const Stakes = () => {
   const userCtx = useContext(UserContext);
-  const { address, vault } = userCtx;
+  const { address, vault, saveUserBalance } = userCtx;
   const [stakeArr, setStakeArr] = useState([]);
   const [withdrawArr, setWithdrawArr] = useState([]);
   const [showSpinner, setShowSpinner] = useState(true);
@@ -75,6 +75,8 @@ const Stakes = () => {
         console.log("Funds are Successfully Withdrawn!");
         await getStakeWithdrawArr();
         showToast("Funds are Successfully Withdrawn!", "success");
+        // update user balance
+        await saveUserBalance();
       } else {
         setShowSpinner(false);
         throw new Error("Withdrawal failed!");
