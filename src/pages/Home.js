@@ -164,6 +164,9 @@ const Home = (props) => {
               ReferredCount: {acctData.referredCount.toString()}
             </ListGroup.Item>
             <ListGroup.Item>
+              Referral URL: {`${process.env.REACT_APP_DOMAIN_URL}?referral=${acctData.id.toString()}`}
+            </ListGroup.Item>
+            <ListGroup.Item>
               Last Active:{" "}
               {convertToDateTime(acctData.lastActiveTimestamp.toNumber())}
             </ListGroup.Item>
