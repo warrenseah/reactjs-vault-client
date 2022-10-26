@@ -7,6 +7,7 @@ const UserContext = createContext({
   address: "",
   balance: 0,
   chainId: 0,
+  referrer: '0',
   connectToMM: (closeSpinnerFunc) => {},
   saveUserData: (address, balance) => {},
   saveUserAddress: (address) => {},
@@ -27,6 +28,8 @@ export const UserContextProvider = (props) => {
   const [signer, setSigner] = useState(null);
   const [vault, setVault] = useState(null);
   const [selectedChain] = useState(ContractMeta.chain_id);
+  const [hasReferrer, setHasReferrer] = useState(false);
+  const [referrerId, setReferrerId] = useState('0');
 
   // Button handler button for handling a
   // request event for metamask
@@ -60,6 +63,10 @@ export const UserContextProvider = (props) => {
         newSigner
       );
       setVault(newVault);
+
+      const doesReferrerExists = await newVault.hasReferrer(accounts[0]);
+      setHasReferrer(doesReferrerExists);
+      
       showToast(`Wallet connected: ${accounts[0]}`);
     } else {
       showToast("Install metamask extension!", 'info');
@@ -91,13 +98,25 @@ export const UserContextProvider = (props) => {
     setProvider(null);
   }, []);
 
+  const saveReferrerId = useCallback((id) => {
+    if(!hasReferrer) {
+      setReferrerId(id);
+      console.log('User dont have referrer address.');
+      return;
+    }
+
+    console.log('User has a referrer id');
+  }, [hasReferrer]);
+
   return (
     <UserContext.Provider
       value={{
         address: userData.address,
         balance: userData.balance,
         chainId: selectedChain,
+        referrer: referrerId,
         connectToMM: connectToMetamask,
+        saveReferrerId: saveReferrerId,
         saveUserData: saveUserData,
         saveUserAddress: saveUserAddress,
         saveUserBalance: saveUserBalance,
