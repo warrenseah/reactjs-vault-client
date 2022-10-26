@@ -12,12 +12,12 @@ import Container from "react-bootstrap/Container";
 import Spinner from "react-bootstrap/Spinner";
 import ListGroup from "react-bootstrap/ListGroup";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { convertToDateTime, showToast } from "../lib/utils";
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
-  const { address, balance, vault, provider, connectToMM, resetMM, signer, chainId } =
+  const { address, balance, vault, provider, connectToMM, resetMM, signer, chainId, saveReferrerId, referrer } =
     userCtx;
 
   const [showSpinner, setShowSpinner] = useState(false);
@@ -26,6 +26,15 @@ const Home = (props) => {
 
   const ethInputRef = useRef();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  let referrerInput = searchParams.get('referral');
+
+  if(!referrerInput) {
+    console.log('no referrer found!');
+    referrerInput = '0'; 
+  } else {
+    console.log('referrer found! ', referrerInput);
+  }
 
   const selectedChainId = ethers.BigNumber.from(chainId).toHexString(); // BNB chain test network
 
@@ -65,11 +74,12 @@ const Home = (props) => {
         stakeCount: stakeLength.length,
       };
       setAcctData(accountData);
+      saveReferrerId(referrerInput);
       window.ethereum.on("accountsChanged", handleAcctChanged);
       window.ethereum.on("chainChanged", handleChainIdChanged);
     };
     init();
-  }, [address, vault, provider, handleAcctChanged, handleChainIdChanged]);
+  }, [address, vault, provider, handleAcctChanged, handleChainIdChanged, saveReferrerId, referrerInput]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -77,7 +87,8 @@ const Home = (props) => {
     const enteredEthAmt = ethInputRef.current.value;
 
     try {
-      const depositTxn = await userCtx.vault.deposit(0, {
+      console.log('depositing...', referrer);
+      const depositTxn = await vault.deposit(referrer, {
         value: ethers.utils.parseEther(enteredEthAmt),
       });
       const txn = await depositTxn.wait();
@@ -187,7 +198,7 @@ const Home = (props) => {
                     <Form.Label>Deposit Ether</Form.Label>
                     <Form.Control
                       type="number"
-                      min="0.1"
+                      min="0.01"
                       step="0.01"
                       ref={ethInputRef}
                     />
