@@ -16,6 +16,10 @@ function YieldRewards(props) {
     return <p>No reward found!</p>;
   }
 
+  if (props.tokens.length === 0) {
+    return <p>Still Loading...</p>;
+  }
+
   const getMeta = (selectedAddress) => {
     const item = props.tokens.find(
       (token) => token.address === selectedAddress
