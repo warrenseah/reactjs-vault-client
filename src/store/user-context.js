@@ -101,11 +101,11 @@ export const UserContextProvider = (props) => {
   const saveReferrerId = useCallback((id) => {
     if(!hasReferrer) {
       setReferrerId(id);
-      console.log('User dont have referrer address.');
+      // console.log('User dont have referrer address.');
       return;
     }
 
-    console.log('User has a referrer id');
+    // console.log('User has a referrer id');
   }, [hasReferrer]);
 
   return (

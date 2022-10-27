@@ -30,10 +30,10 @@ const Home = (props) => {
   let referrerInput = searchParams.get('referral');
 
   if(!referrerInput) {
-    console.log('no referrer found!');
+    // console.log('no referrer found!');
     referrerInput = '0'; 
   } else {
-    console.log('referrer found! ', referrerInput);
+    // console.log('referrer found! ', referrerInput);
   }
 
   const selectedChainId = ethers.BigNumber.from(chainId).toHexString(); // BNB chain test network
