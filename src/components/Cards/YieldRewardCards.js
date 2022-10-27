@@ -9,14 +9,24 @@ import { convertToDateTime, truncateTo2DC } from "../../lib/utils";
 import tokens from "../../lib/tokens.json";
 
 function YieldRewards(props) {
+  const { items } = props;
+
   let count = 0;
   if (props.items.length === 0) {
     return <p>No reward found!</p>;
   }
 
+  const getMeta = (selectedAddress) => {
+    const item = props.tokens.find(
+      (token) => token.address === selectedAddress
+    );
+    // console.log(item);
+    return item;
+  };
+
   return (
     <Row md={2} className="g-4">
-      {props.items.map((item, index) => (
+      {items.map((item, index) => (
         <Col key={item.stake.id.toString()}>
           <Card bg="success" text="white">
             <Card.Header>
@@ -24,11 +34,14 @@ function YieldRewards(props) {
               {`YieldId: ${item.yield.id.toNumber() + 1}`}
             </Card.Header>
             <Card.Body>
-              <Card.Title>Coin: {tokens[0].name}</Card.Title>
+              <Card.Title>Coin: {getMeta(item.yield.token).name}</Card.Title>
             </Card.Body>
             <ListGroup className="list-group-flush">
               <ListGroup.Item variant="success">
-                Symbol: {tokens[0].symbol}
+                Symbol: {getMeta(item.yield.token).symbol}
+              </ListGroup.Item>
+              <ListGroup.Item variant="success">
+                Decimals: {getMeta(item.yield.token).decimals}
               </ListGroup.Item>
               <ListGroup.Item variant="success">
                 Start: {convertToDateTime(item.yield.sinceTime.toString())}
@@ -38,7 +51,12 @@ function YieldRewards(props) {
               </ListGroup.Item>
             </ListGroup>
             <Card.Body className="text-center">
-              <Card.Text>Claim: {`${truncateTo2DC(ethers.utils.formatEther(item.claimAmt[1]))} ${tokens[0].symbol}`} </Card.Text>
+              <Card.Text>
+                Claim:{" "}
+                {`${truncateTo2DC(
+                  ethers.utils.formatEther(item.claimAmt[1])
+                )} ${getMeta(item.yield.token).symbol}`}{" "}
+              </Card.Text>
               <Button
                 onClick={() => {
                   props.onClaim(
