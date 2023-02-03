@@ -1,5 +1,14 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import UserContext from "../store/user-context";
+
+import Header from "../components/layout/Header";
 
 import { ethers } from "ethers";
 
@@ -17,8 +26,18 @@ import { convertToDateTime, showToast } from "../lib/utils";
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
-  const { address, balance, vault, provider, connectToMM, resetMM, signer, chainId, saveReferrerId, referrer } =
-    userCtx;
+  const {
+    address,
+    balance,
+    vault,
+    provider,
+    connectToMM,
+    resetMM,
+    signer,
+    chainId,
+    saveReferrerId,
+    referrer,
+  } = userCtx;
 
   const [showSpinner, setShowSpinner] = useState(false);
   const [showSpinnerConnect, setShowSpinnerConnect] = useState(false);
@@ -27,11 +46,11 @@ const Home = (props) => {
   const ethInputRef = useRef();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  let referrerInput = searchParams.get('referral');
+  let referrerInput = searchParams.get("referral");
 
-  if(!referrerInput) {
+  if (!referrerInput) {
     // console.log('no referrer found!');
-    referrerInput = '0'; 
+    referrerInput = "0";
   } else {
     // console.log('referrer found! ', referrerInput);
   }
@@ -51,7 +70,7 @@ const Home = (props) => {
     (chainIdHex) => {
       console.log("chainId changed: ", chainIdHex);
       if (chainIdHex !== selectedChainId) {
-        showToast("Please change to the selected network!", 'warning');
+        showToast("Please change to the selected network!", "warning");
         setAcctData({});
         resetMM();
       } else {
@@ -79,7 +98,15 @@ const Home = (props) => {
       window.ethereum.on("chainChanged", handleChainIdChanged);
     };
     init();
-  }, [address, vault, provider, handleAcctChanged, handleChainIdChanged, saveReferrerId, referrerInput]);
+  }, [
+    address,
+    vault,
+    provider,
+    handleAcctChanged,
+    handleChainIdChanged,
+    saveReferrerId,
+    referrerInput,
+  ]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -87,7 +114,7 @@ const Home = (props) => {
     const enteredEthAmt = ethInputRef.current.value;
 
     try {
-      console.log('depositing...', referrer);
+      console.log("depositing...", referrer);
       const depositTxn = await vault.deposit(referrer, {
         value: ethers.utils.parseEther(enteredEthAmt),
       });
@@ -96,13 +123,13 @@ const Home = (props) => {
         setShowSpinner(false);
         userCtx.saveUserBalance();
         console.log("Deposit is successfully!");
-        showToast(`${enteredEthAmt} BNB submitted!`, 'success');
+        showToast(`${enteredEthAmt} BNB submitted!`, "success");
         navigate("stakes");
       }
     } catch (error) {
       setShowSpinner(false);
       console.log("Deposit error, ", error);
-      showToast(`Deposit Error! Please try again!`, 'error');
+      showToast(`Deposit Error! Please try again!`, "error");
     }
   };
 
@@ -132,7 +159,7 @@ const Home = (props) => {
         setShowSpinnerConnect(true);
         connectToMM(closeSpinnerHandler);
       }}
-      variant="primary" 
+      variant="primary"
     >
       Connect to wallet
     </Button>
@@ -164,7 +191,10 @@ const Home = (props) => {
               ReferredCount: {acctData.referredCount.toString()}
             </ListGroup.Item>
             <ListGroup.Item>
-              Referral URL: {`${process.env.REACT_APP_DOMAIN_URL}?referral=${acctData.id.toString()}`}
+              Referral URL:{" "}
+              {`${
+                process.env.REACT_APP_DOMAIN_URL
+              }?referral=${acctData.id.toString()}`}
             </ListGroup.Item>
             <ListGroup.Item>
               Last Active:{" "}
@@ -179,43 +209,46 @@ const Home = (props) => {
   );
 
   return (
-    <Container>
-      <Row>
-        <Col>
-          <Card>
-            <Card.Header className="text-center">
-              <strong>Address: </strong>
-              {address}
-            </Card.Header>
-            <Card.Body>
-              <Card.Text>
-                <strong>Balance: </strong>
-                {balance}
-              </Card.Text>
+    <Fragment>
+      <Header />
+      <Container>
+        <Row>
+          <Col>
+            <Card>
+              <Card.Header className="text-center">
+                <strong>Address: </strong>
+                {address}
+              </Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  <strong>Balance: </strong>
+                  {balance}
+                </Card.Text>
 
-              {!signer && showConnectOrSpinner}
+                {!signer && showConnectOrSpinner}
 
-              {signer && (
-                <Form onSubmit={submitHandler}>
-                  <Form.Group className="mb-3" controlId="formBasicDeposit">
-                    <Form.Label>Deposit Ether</Form.Label>
-                    <Form.Control
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      ref={ethInputRef}
-                    />
-                  </Form.Group>
-                  {showBtnOrSpinner}
-                </Form>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+                {signer && (
+                  <Form onSubmit={submitHandler}>
+                    <Form.Group className="mb-3" controlId="formBasicDeposit">
+                      <Form.Label>Deposit Ether</Form.Label>
+                      <Form.Control
+                        type="number"
+                        min="0.01"
+                        step="0.01"
+                        ref={ethInputRef}
+                      />
+                    </Form.Group>
+                    {showBtnOrSpinner}
+                  </Form>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
 
-      {address && showProfile}
-    </Container>
+        {address && showProfile}
+      </Container>
+    </Fragment>
   );
 };
 
