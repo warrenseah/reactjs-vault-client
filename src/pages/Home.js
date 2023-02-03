@@ -176,34 +176,32 @@ const Home = (props) => {
   );
 
   const showProfile = acctData.haveStakes ? (
-    <Row className="my-3">
-      <Col>
-        <Card>
-          <Card.Header className="text-center">
-            <strong>User Profile </strong>
-          </Card.Header>
-          <ListGroup className="list-group-flush">
-            <ListGroup.Item>
-              <strong> Total Stakes: {acctData.stakeCount}</strong>
-            </ListGroup.Item>
-            <ListGroup.Item>AccountId: {acctData.id.toString()}</ListGroup.Item>
-            <ListGroup.Item>
-              ReferredCount: {acctData.referredCount.toString()}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              Referral URL:{" "}
-              {`${
-                process.env.REACT_APP_DOMAIN_URL
-              }?referral=${acctData.id.toString()}`}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              Last Active:{" "}
-              {convertToDateTime(acctData.lastActiveTimestamp.toNumber())}
-            </ListGroup.Item>
-          </ListGroup>
-        </Card>
-      </Col>
-    </Row>
+    <Col lg={6} className="my-3">
+      <Card>
+        <Card.Header className="text-center">
+          <strong>User Profile </strong>
+        </Card.Header>
+        <ListGroup className="list-group-flush">
+          <ListGroup.Item>
+            <strong> Total Stakes: {acctData.stakeCount}</strong>
+          </ListGroup.Item>
+          <ListGroup.Item>AccountId: {acctData.id.toString()}</ListGroup.Item>
+          <ListGroup.Item>
+            ReferredCount: {acctData.referredCount.toString()}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            Referral URL:{" "}
+            {`${
+              process.env.REACT_APP_DOMAIN_URL
+            }?referral=${acctData.id.toString()}`}
+          </ListGroup.Item>
+          <ListGroup.Item>
+            Last Active:{" "}
+            {convertToDateTime(acctData.lastActiveTimestamp.toNumber())}
+          </ListGroup.Item>
+        </ListGroup>
+      </Card>
+    </Col>
   ) : (
     ""
   );
@@ -212,8 +210,8 @@ const Home = (props) => {
     <Fragment>
       <Header />
       <Container>
-        <Row>
-          <Col>
+        <Row className="justify-content-lg-center">
+          <Col lg={6} className="my-3">
             <Card>
               <Card.Header className="text-center">
                 <strong>Address: </strong>
@@ -244,9 +242,8 @@ const Home = (props) => {
               </Card.Body>
             </Card>
           </Col>
+          {address && showProfile}
         </Row>
-
-        {address && showProfile}
       </Container>
     </Fragment>
   );
