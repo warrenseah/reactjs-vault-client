@@ -1,5 +1,10 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Col, Container, Row, Spinner } from "react-bootstrap";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Spinner from "react-bootstrap/Spinner";
+
 import { Navigate } from "react-router-dom";
 import StakeCards from "../components/Cards/StakeCards";
 import WithdrawalCards from "../components/Cards/WithdrawalCards";
@@ -8,7 +13,7 @@ import { showToast } from "../lib/utils";
 
 const Stakes = () => {
   const userCtx = useContext(UserContext);
-  const { address, vault } = userCtx;
+  const { address, vault, saveUserBalance } = userCtx;
   const [stakeArr, setStakeArr] = useState([]);
   const [withdrawArr, setWithdrawArr] = useState([]);
   const [showSpinner, setShowSpinner] = useState(true);
@@ -70,6 +75,8 @@ const Stakes = () => {
         console.log("Funds are Successfully Withdrawn!");
         await getStakeWithdrawArr();
         showToast("Funds are Successfully Withdrawn!", "success");
+        // update user balance
+        await saveUserBalance();
       } else {
         setShowSpinner(false);
         throw new Error("Withdrawal failed!");

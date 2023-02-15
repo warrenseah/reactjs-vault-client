@@ -6,7 +6,9 @@ import { showToast } from "../lib/utils";
 const UserContext = createContext({
   address: "",
   balance: 0,
-  connectToMM: () => {},
+  chainId: 0,
+  referrer: '0',
+  connectToMM: (closeSpinnerFunc) => {},
   saveUserData: (address, balance) => {},
   saveUserAddress: (address) => {},
   saveUserBalance: () => {},
@@ -25,17 +27,21 @@ export const UserContextProvider = (props) => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [vault, setVault] = useState(null);
+  const [selectedChain] = useState(ContractMeta.chain_id);
+  const [hasReferrer, setHasReferrer] = useState(false);
+  const [referrerId, setReferrerId] = useState('0');
 
   // Button handler button for handling a
   // request event for metamask
-  const connectToMetamask = useCallback(async () => {
+  const connectToMetamask = useCallback(async (closeSpinnerFunc) => {
     // Asking if metamask is already present or not
     if (window.ethereum) {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
       const chainId = await newProvider.getNetwork();
 
-      if(chainId.chainId !== 1337) {
-        showToast("Switch and use Ganache Test Network", 'warning');
+      if(chainId.chainId !== selectedChain) {
+        showToast("Switch and use BNB Test Network", 'warning');
+        closeSpinnerFunc() // stop spinner display
         return;
       }
 
@@ -57,11 +63,16 @@ export const UserContextProvider = (props) => {
         newSigner
       );
       setVault(newVault);
+
+      const doesReferrerExists = await newVault.hasReferrer(accounts[0]);
+      setHasReferrer(doesReferrerExists);
+      
       showToast(`Wallet connected: ${accounts[0]}`);
     } else {
       showToast("Install metamask extension!", 'info');
+      closeSpinnerFunc();
     }
-  }, []);
+  }, [selectedChain]);
 
   const saveUserData = (address, balance) => {
     setUserData({ address, balance });
@@ -87,12 +98,25 @@ export const UserContextProvider = (props) => {
     setProvider(null);
   }, []);
 
+  const saveReferrerId = useCallback((id) => {
+    if(!hasReferrer) {
+      setReferrerId(id);
+      // console.log('User dont have referrer address.');
+      return;
+    }
+
+    // console.log('User has a referrer id');
+  }, [hasReferrer]);
+
   return (
     <UserContext.Provider
       value={{
         address: userData.address,
         balance: userData.balance,
+        chainId: selectedChain,
+        referrer: referrerId,
         connectToMM: connectToMetamask,
+        saveReferrerId: saveReferrerId,
         saveUserData: saveUserData,
         saveUserAddress: saveUserAddress,
         saveUserBalance: saveUserBalance,
