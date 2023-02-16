@@ -7,8 +7,9 @@ const UserContext = createContext({
   address: "",
   balance: 0,
   chainId: 0,
-  referrer: '0',
+  referrer: "0",
   connectToMM: (closeSpinnerFunc) => {},
+  connectToBlockchain: () => {},
   saveUserData: (address, balance) => {},
   saveUserAddress: (address) => {},
   saveUserBalance: () => {},
@@ -29,67 +30,7 @@ export const UserContextProvider = (props) => {
   const [vault, setVault] = useState(null);
   const [selectedChain] = useState(ContractMeta.chain_id);
   const [hasReferrer, setHasReferrer] = useState(false);
-  const [referrerId, setReferrerId] = useState('0');
-
-  // Button handler button for handling a
-  // request event for metamask
-  const connectToMetamask = useCallback(async (closeSpinnerFunc) => {
-    // Asking if metamask is already present or not
-    if (window.ethereum) {
-      const newProvider = new ethers.providers.Web3Provider(window.ethereum);
-      const chainId = await newProvider.getNetwork();
-
-      if(chainId.chainId !== selectedChain) {
-        showToast("Switch and use BNB Test Network", 'warning');
-        closeSpinnerFunc() // stop spinner display
-        return;
-      }
-
-      const accounts = await newProvider.send("eth_requestAccounts", []);
-      const balance = await newProvider.getBalance(accounts[0]);
-      setUserData({
-        address: accounts[0],
-        balance: ethers.utils.formatEther(balance),
-      });
-
-      const newSigner = newProvider.getSigner();
-      setProvider(newProvider);
-      setSigner(newSigner);
-
-      // instantiate contract abstraction
-      const newVault = new ethers.Contract(
-        ContractMeta.vaultAddress,
-        ContractMeta.vaultAbi,
-        newSigner
-      );
-      setVault(newVault);
-
-      const doesReferrerExists = await newVault.hasReferrer(accounts[0]);
-      setHasReferrer(doesReferrerExists);
-      
-      showToast(`Wallet connected: ${accounts[0]}`);
-    } else {
-      showToast("Install metamask extension!", 'info');
-      closeSpinnerFunc();
-    }
-  }, [selectedChain]);
-
-  const saveUserData = (address, balance) => {
-    setUserData({ address, balance });
-  };
-
-  const saveUserAddress = (address) => {
-    setUserData(prev => { 
-        return { ...prev, address}; 
-    });
-  };
-
-  const saveUserBalance = async () => {
-    const newBalance = await signer.getBalance();
-    setUserData(prev => { 
-        return { ...prev, balance : ethers.utils.formatEther(newBalance)}; 
-    });
-  };
+  const [referrerId, setReferrerId] = useState("0");
 
   const resetMM = useCallback(() => {
     setUserData({ address: "", balance: 0 });
@@ -98,15 +39,102 @@ export const UserContextProvider = (props) => {
     setProvider(null);
   }, []);
 
-  const saveReferrerId = useCallback((id) => {
-    if(!hasReferrer) {
-      setReferrerId(id);
-      // console.log('User dont have referrer address.');
+  // Connect to blockchain readonly
+  const connectToBlockchain = useCallback(async () => {
+    const newProvider = new ethers.providers.JsonRpcProvider(
+      process.env.REACT_APP_BSC_TESTNET_RPC
+    );
+    const chainId = await newProvider.getNetwork();
+    if (chainId.chainId !== selectedChain) {
+      showToast("Switch and use BNB Test Network", "warning");
       return;
     }
 
-    // console.log('User has a referrer id');
-  }, [hasReferrer]);
+    setProvider(newProvider);
+    // instantiate contract abstraction
+    const newVault = new ethers.Contract(
+      ContractMeta.vaultAddress,
+      ContractMeta.vaultAbi,
+      newProvider
+    );
+    setVault(newVault);
+  }, [selectedChain]);
+
+  // Button handler button for handling a
+  // request event for metamask
+  const connectToMetamask = useCallback(
+    async (closeSpinnerFunc) => {
+      // Asking if metamask is already present or not
+      if (window.ethereum) {
+        const newProvider = new ethers.providers.Web3Provider(window.ethereum);
+        const chainId = await newProvider.getNetwork();
+
+        if (chainId.chainId !== selectedChain) {
+          showToast("Switch and use BNB Test Network", "warning");
+          closeSpinnerFunc(); // stop spinner display
+          return;
+        }
+
+        const accounts = await newProvider.send("eth_requestAccounts", []);
+        const balance = await newProvider.getBalance(accounts[0]);
+        setUserData({
+          address: accounts[0],
+          balance: ethers.utils.formatEther(balance),
+        });
+
+        const newSigner = newProvider.getSigner();
+        setProvider(newProvider);
+        setSigner(newSigner);
+
+        // instantiate contract abstraction
+        const newVault = new ethers.Contract(
+          ContractMeta.vaultAddress,
+          ContractMeta.vaultAbi,
+          newSigner
+        );
+        setVault(newVault);
+
+        const doesReferrerExists = await newVault.hasReferrer(accounts[0]);
+        setHasReferrer(doesReferrerExists);
+
+        showToast(`Wallet connected: ${accounts[0]}`);
+      } else {
+        showToast("Install metamask extension!", "info");
+        closeSpinnerFunc();
+      }
+    },
+    [selectedChain]
+  );
+
+  const saveUserData = (address, balance) => {
+    setUserData({ address, balance });
+  };
+
+  const saveUserAddress = (address) => {
+    setUserData((prev) => {
+      return { ...prev, address };
+    });
+  };
+
+  const saveUserBalance = async () => {
+    const newBalance = await signer.getBalance();
+    setUserData((prev) => {
+      return { ...prev, balance: ethers.utils.formatEther(newBalance) };
+    });
+  };
+
+  const saveReferrerId = useCallback(
+    (id) => {
+      if (!hasReferrer) {
+        setReferrerId(id);
+        // console.log('User dont have referrer address.');
+        return;
+      }
+
+      // console.log('User has a referrer id');
+    },
+    [hasReferrer]
+  );
 
   return (
     <UserContext.Provider
@@ -116,6 +144,7 @@ export const UserContextProvider = (props) => {
         chainId: selectedChain,
         referrer: referrerId,
         connectToMM: connectToMetamask,
+        connectToBlockchain: connectToBlockchain,
         saveReferrerId: saveReferrerId,
         saveUserData: saveUserData,
         saveUserAddress: saveUserAddress,
