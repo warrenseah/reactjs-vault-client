@@ -7,7 +7,7 @@ const CallToAction = (props) => {
   const submitHandler = (e) => {
     e.preventDefault();
     const selectedEmail = emailInput.current.value;
-    console.log("form submitted!");
+    showToast(`User email (${selectedEmail}) is submitted!`, "success");
   };
 
   return (
