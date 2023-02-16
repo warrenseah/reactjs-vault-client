@@ -15,7 +15,7 @@ import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import { convertToDateTime, showToast } from "../lib/utils";
 
-const Banner = ({ acctData }) => {
+const UserMetrics = ({ acctData }) => {
   const userCtx = useContext(UserContext);
   const { address, balance, vault, connectToMM, signer, referrer } = userCtx;
 
@@ -165,4 +165,4 @@ const Banner = ({ acctData }) => {
   );
 };
 
-export default Banner;
+export default UserMetrics;

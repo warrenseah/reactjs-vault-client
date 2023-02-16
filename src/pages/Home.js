@@ -7,7 +7,7 @@ import Features from "../components/Features";
 import { ethers } from "ethers";
 
 import { useSearchParams } from "react-router-dom";
-import Banner from "../components/Banner";
+import UserMetrics from "../components/UserMetrics";
 import { showToast } from "../lib/utils";
 
 const Home = (props) => {
@@ -116,7 +116,7 @@ const Home = (props) => {
     <Fragment>
       <Header />
       <Features entryFee={entryFee} farmingFee={farmingFee} />
-      <Banner acctData={acctData} />
+      <UserMetrics acctData={acctData} />
     </Fragment>
   );
 };
