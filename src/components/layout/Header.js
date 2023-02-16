@@ -16,7 +16,7 @@ const Header = () => {
               fees will be charged on the altcoins farmed when altcoin rewards
               are claimed.
             </p>
-            <Button variant="primary" size="lg" href="#">
+            <Button variant="primary" size="lg" href="/#connectToWallet">
               Start Now
             </Button>
           </div>
