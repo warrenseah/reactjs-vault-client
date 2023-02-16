@@ -24,7 +24,7 @@ const CallToAction = (props) => {
                   aria-describedby="button-newsletter"
                 />
                 <button
-                  className="btn btn-outline-light"
+                  className="btn btn-secondary"
                   id="button-newsletter"
                   type="button"
                 >
