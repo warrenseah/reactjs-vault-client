@@ -1,6 +1,15 @@
+import { useRef } from "react";
 import { Container, Row } from "react-bootstrap";
+import { showToast } from "../lib/utils";
 
 const CallToAction = (props) => {
+  const emailInput = useRef();
+  const submitHandler = (e) => {
+    e.preventDefault();
+    const selectedEmail = emailInput.current.value;
+    console.log("form submitted!");
+  };
+
   return (
     <Container>
       <Row className="justify-content-lg-center">
@@ -16,17 +25,20 @@ const CallToAction = (props) => {
             </div>
             <div className="ms-xl-4">
               <div className="input-group mb-2">
-                <input
-                  className="form-control"
-                  type="text"
-                  placeholder="Email address..."
-                  aria-label="Email address..."
-                  aria-describedby="button-newsletter"
-                />
+                <form id="form1" onSubmit={submitHandler}>
+                  <input
+                    className="form-control"
+                    type="email"
+                    placeholder="Email address..."
+                    aria-label="Email address..."
+                    aria-describedby="button-newsletter"
+                    ref={emailInput}
+                  />
+                </form>
                 <button
                   className="btn btn-secondary"
-                  id="button-newsletter"
-                  type="button"
+                  type="submit"
+                  form="form1"
                 >
                   Sign up
                 </button>
