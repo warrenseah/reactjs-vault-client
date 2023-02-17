@@ -96,10 +96,10 @@ const Rewards = () => {
   }, [vault, getStakeArr, provider]);
 
   useEffect(() => {
-    if (!vault || !provider) {
+    if (!address) {
       return;
     }
-    
+
     init();
     const filterClaimFrom = vault.filters.ClaimedTokens(
       null,
