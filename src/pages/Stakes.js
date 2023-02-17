@@ -41,7 +41,7 @@ const Stakes = () => {
   }, [address, vault]);
 
   useEffect(() => {
-    if (!vault) {
+    if (!address) {
       return;
     }
     getStakeWithdrawArr();
@@ -89,8 +89,8 @@ const Stakes = () => {
   };
 
   // Redirect if not connected to Metamask or vault contract is not defined
-  if (!address || !vault) {
-    return <Navigate to="/" replace />;
+  if (!address) {
+    return <Navigate to="/deposit" replace />;
   }
 
   return (
