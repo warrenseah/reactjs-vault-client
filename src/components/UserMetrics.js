@@ -31,42 +31,50 @@ const UserMetrics = ({ acctData }) => {
   };
 
   const showConnectOrSpinner = !showSpinnerConnect ? (
-    <Button
-      id="connectToWallet"
-      onClick={() => {
-        setShowSpinnerConnect(true);
-        connectToMM(closeSpinnerHandler);
-      }}
-      variant="primary"
-    >
-      Connect to wallet
-    </Button>
+    <div className="d-flex justify-content-center">
+      <Button
+        id="connectToWallet"
+        onClick={() => {
+          setShowSpinnerConnect(true);
+          connectToMM(closeSpinnerHandler);
+        }}
+        variant="primary"
+      >
+        Connect to wallet
+      </Button>
+    </div>
   ) : (
-    <Button variant="secondary" disabled>
-      <Spinner
-        as="span"
-        animation="border"
-        size="md"
-        role="status"
-        aria-hidden="true"
-      />
-    </Button>
+    <div className="d-flex justify-content-center">
+      <Button variant="secondary" disabled>
+        <Spinner
+          as="span"
+          animation="border"
+          size="md"
+          role="status"
+          aria-hidden="true"
+        />
+      </Button>
+    </div>
   );
 
   const showBtnOrSpinner = !showSpinner ? (
-    <Button variant="primary" type="submit">
-      Deposit
-    </Button>
+    <div className="d-flex justify-content-center">
+      <Button variant="primary" type="submit">
+        Deposit
+      </Button>
+    </div>
   ) : (
-    <Button variant="secondary" disabled>
-      <Spinner
-        as="span"
-        animation="border"
-        size="md"
-        role="status"
-        aria-hidden="true"
-      />
-    </Button>
+    <div className="d-flex justify-content-center">
+      <Button variant="secondary" disabled>
+        <Spinner
+          as="span"
+          animation="border"
+          size="md"
+          role="status"
+          aria-hidden="true"
+        />
+      </Button>
+    </div>
   );
 
   const submitHandler = async (event) => {
@@ -135,7 +143,7 @@ const UserMetrics = ({ acctData }) => {
               {address}
             </Card.Header>
             <Card.Body>
-              <Card.Text>
+              <Card.Text className="text-center">
                 <strong>Balance: </strong>
                 {balance}
               </Card.Text>
