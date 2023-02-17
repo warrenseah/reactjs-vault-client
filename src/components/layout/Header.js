@@ -1,4 +1,5 @@
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -16,9 +17,11 @@ const Header = () => {
               fees will be charged on the altcoins farmed when altcoin rewards
               are claimed.
             </p>
-            <Button variant="primary" size="lg" href="/#connectToWallet">
-              Start Now
-            </Button>
+            <Link to="/deposit">
+              <Button variant="primary" size="lg">
+                Start Now
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
