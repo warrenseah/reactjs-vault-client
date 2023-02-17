@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import UserContext from "../store/user-context";
 
-import Header from "../components/layout/Header";
+import Jumbotron from "../components/layout/Jumbotron";
 import Features from "../components/Features";
 
 const Home = (props) => {
@@ -37,7 +37,7 @@ const Home = (props) => {
 
   return (
     <Fragment>
-      <Header />
+      <Jumbotron />
       <Features entryFee={entryFee} farmingFee={farmingFee} />
     </Fragment>
   );

@@ -1,7 +1,7 @@
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 
-const Header = () => {
+const Jumbotron = () => {
   return (
     <header className="py-5">
       <div className="container">
@@ -29,4 +29,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Jumbotron;
