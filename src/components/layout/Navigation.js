@@ -16,6 +16,9 @@ function Navigation() {
             <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/deposit">
+              <Nav.Link>Deposit</Nav.Link>
+            </LinkContainer>
             <LinkContainer to="/stakes">
               <Nav.Link>Stakes</Nav.Link>
             </LinkContainer>
