@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Container, Row } from "react-bootstrap";
-import { showToast } from "../lib/utils";
+import { showToast } from "../../lib/utils";
 
 const CallToAction = (props) => {
   const emailInput = useRef();
