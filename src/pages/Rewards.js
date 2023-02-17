@@ -138,7 +138,7 @@ const Rewards = () => {
   }, [address, vault, signer, init, provider]);
 
   if (!userCtx.address) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/deposit" replace />;
   }
 
   const claimHandler = async (stakeId, yieldId) => {
