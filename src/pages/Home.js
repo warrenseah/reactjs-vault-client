@@ -1,7 +1,7 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import UserContext from "../store/user-context";
 
-import Jumbotron from "../components/layout/Jumbotron";
+import Jumbotron from "../components/Jumbotron";
 import Features from "../components/Features";
 
 const Home = (props) => {
