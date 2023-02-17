@@ -1,5 +1,5 @@
 import { Fragment, useContext, useEffect, useState, useCallback } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import UserContext from "../store/user-context";
 
 import { ethers } from "ethers";
