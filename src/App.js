@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Spinner from "react-bootstrap/Spinner";
 
+const Deposit = React.lazy(() => import("./pages/Deposit"));
 const Stakes = React.lazy(() => import("./pages/Stakes"));
 const Rewards = React.lazy(() => import("./pages/Rewards"));
 const NoPage = React.lazy(() => import("./pages/NoPage"));
@@ -25,6 +26,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="deposit" element={<Deposit />} />
             <Route path="stakes" element={<Stakes />} />
             <Route path="rewards" element={<Rewards />} />
             <Route path="*" element={<NoPage />} />
