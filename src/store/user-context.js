@@ -8,11 +8,13 @@ const UserContext = createContext({
   balance: 0,
   chainId: 0,
   referrer: "0",
+  scData: {},
   connectToMM: (closeSpinnerFunc) => {},
   connectToBlockchain: () => {},
   saveUserData: (address, balance) => {},
   saveUserAddress: (address) => {},
   saveUserBalance: () => {},
+  saveScData: () => {},
   resetMM: () => {},
   vault: null,
   signer: null,
@@ -27,6 +29,7 @@ export const UserContextProvider = (props) => {
   const [userData, setUserData] = useState({ address: "", balance: 0 });
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
+  const [scData, setScData] = useState({});
   const [vault, setVault] = useState(null);
   const [selectedChain] = useState(ContractMeta.chain_id);
   const [hasReferrer, setHasReferrer] = useState(false);
@@ -58,6 +61,22 @@ export const UserContextProvider = (props) => {
       newProvider
     );
     setVault(newVault);
+
+    const feeEntry = await newVault.entryFee();
+    const feeFarming = await newVault.farmingFee();
+    const totalBNBStakes = await newVault.totalStakes();
+    const totalAccounts = await newVault.nextAccountId();
+    const yieldLength = await newVault.yieldsLength();
+    const withdrawalLength = await newVault.withdrawalLength();
+
+    setScData({
+      entryFee: feeEntry.toString(),
+      farmingFee: feeFarming.toString(),
+      totalStakes: ethers.utils.formatEther(totalBNBStakes),
+      totalAccounts: totalAccounts.toString(),
+      totalYields: yieldLength.toString(),
+      totalWithdrawals: withdrawalLength.toString(),
+    });
   }, [selectedChain]);
 
   // Button handler button for handling a
@@ -143,6 +162,7 @@ export const UserContextProvider = (props) => {
         balance: userData.balance,
         chainId: selectedChain,
         referrer: referrerId,
+        scData: scData,
         connectToMM: connectToMetamask,
         connectToBlockchain: connectToBlockchain,
         saveReferrerId: saveReferrerId,
