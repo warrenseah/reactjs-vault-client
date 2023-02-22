@@ -11,6 +11,7 @@ import Spinner from "react-bootstrap/Spinner";
 const Deposit = React.lazy(() => import("./pages/Deposit"));
 const Stakes = React.lazy(() => import("./pages/Stakes"));
 const Rewards = React.lazy(() => import("./pages/Rewards"));
+const Faq = React.lazy(() => import("./pages/Faq"));
 const NoPage = React.lazy(() => import("./pages/NoPage"));
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="deposit" element={<Deposit />} />
             <Route path="stakes" element={<Stakes />} />
             <Route path="rewards" element={<Rewards />} />
+            <Route path="faq" element={<Faq />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>

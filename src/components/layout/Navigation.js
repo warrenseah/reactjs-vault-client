@@ -25,6 +25,9 @@ function Navigation() {
             <LinkContainer to="/rewards">
               <Nav.Link>Rewards</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/faq">
+              <Nav.Link>Faq</Nav.Link>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Container>
