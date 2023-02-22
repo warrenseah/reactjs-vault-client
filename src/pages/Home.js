@@ -3,6 +3,7 @@ import UserContext from "../store/user-context";
 
 import Jumbotron from "../components/Jumbotron";
 import Features from "../components/Features";
+import FeeCounter from "../components/FeeCounter";
 
 const Home = (props) => {
   const userCtx = useContext(UserContext);
@@ -39,6 +40,7 @@ const Home = (props) => {
     <Fragment>
       <Jumbotron />
       <Features entryFee={entryFee} farmingFee={farmingFee} />
+      <FeeCounter />
     </Fragment>
   );
 };
