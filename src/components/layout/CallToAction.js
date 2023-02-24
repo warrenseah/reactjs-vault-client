@@ -1,13 +1,29 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { showToast } from "../../lib/utils";
 
 const CallToAction = (props) => {
   const emailInput = useRef();
-  const submitHandler = (e) => {
+  const nameInput = useRef();
+
+  const [disableBtn, setDisableBtn] = useState(false);
+
+  const submitHandler = async (e) => {
     e.preventDefault();
     const selectedEmail = emailInput.current.value;
-    showToast(`User email (${selectedEmail}) is submitted!`, "success");
+    const selectedName = nameInput.current.value;
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ first_name: selectedName, email: selectedEmail }),
+    };
+    const response = await fetch("/api/newsletter", requestOptions);
+    const data = await response.json();
+    console.log("frontend: ", data.data);
+    if (data.data.id) {
+      setDisableBtn(true);
+      showToast(`User email (${selectedEmail}) is submitted!`, "success");
+    }
   };
 
   return (
@@ -23,9 +39,18 @@ const CallToAction = (props) => {
                 Sign up for our newsletter for the latest updates.
               </div>
             </div>
-            <div className="ms-xl-4">
-              <div className="input-group mb-2">
-                <form id="form1" onSubmit={submitHandler}>
+            <form id="form1" onSubmit={submitHandler}>
+              <div className="row justify-content-end">
+                <div className="col-sm-4 mb-2">
+                  <input
+                    className="form-control"
+                    type="text"
+                    placeholder="First Name"
+                    ref={nameInput}
+                    required
+                  />
+                </div>
+                <div className="col-sm-5 mb-2">
                   <input
                     className="form-control"
                     type="email"
@@ -33,20 +58,28 @@ const CallToAction = (props) => {
                     aria-label="Email address..."
                     aria-describedby="button-newsletter"
                     ref={emailInput}
+                    required
                   />
-                </form>
-                <button
-                  className="btn btn-secondary"
-                  type="submit"
-                  form="form1"
-                >
-                  Sign up
-                </button>
+                </div>
+                <div className="col-sm-3">
+                  <button
+                    className="btn btn-secondary"
+                    type="submit"
+                    form="form1"
+                    disabled={disableBtn}
+                  >
+                    {disableBtn ? "Done" : "Sign up"}
+                  </button>
+                </div>
               </div>
-              <div className="small text-white-50">
-                We care about privacy, and will never share your data.
+              <div className="row">
+                <div className="col">
+                  <div className="small text-white-50">
+                    We care about privacy, and will never share your data.
+                  </div>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </aside>
       </Row>
