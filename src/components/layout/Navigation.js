@@ -28,9 +28,9 @@ function Navigation() {
             <LinkContainer to="/faq">
               <Nav.Link>Faq</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/api">
+            {/* <LinkContainer to="/api">
               <Nav.Link>Api</Nav.Link>
-            </LinkContainer>
+            </LinkContainer> */}
           </Nav>
         </Navbar.Collapse>
       </Container>
