@@ -6,7 +6,7 @@ const Api = (props) => {
     const getFromApi = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACKEND_HOST}/api/newsletter`
+          `${process.env.REACT_APP_BACKEND_HOST}/api/me`
         );
         const data = await response.json();
         setData(data);
