@@ -12,6 +12,7 @@ const Deposit = React.lazy(() => import("./pages/Deposit"));
 const Stakes = React.lazy(() => import("./pages/Stakes"));
 const Rewards = React.lazy(() => import("./pages/Rewards"));
 const Faq = React.lazy(() => import("./pages/Faq"));
+const Api = React.lazy(() => import("./pages/Api"));
 const NoPage = React.lazy(() => import("./pages/NoPage"));
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="stakes" element={<Stakes />} />
             <Route path="rewards" element={<Rewards />} />
             <Route path="faq" element={<Faq />} />
+            <Route path="api" element={<Api />} />
             <Route path="*" element={<NoPage />} />
           </Route>
         </Routes>
