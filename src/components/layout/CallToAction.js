@@ -17,7 +17,10 @@ const CallToAction = (props) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ first_name: selectedName, email: selectedEmail }),
     };
-    const response = await fetch("/api/newsletter", requestOptions);
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_HOST}/api/newsletter`,
+      requestOptions
+    );
     const data = await response.json();
     console.log("frontend: ", data.data);
     if (data.data.id) {
